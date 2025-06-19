@@ -1,26 +1,29 @@
-from flask import Flask, request, jsonify
 import openai
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-@app.route('/webhook', methods=['POST'])
-def webhook():
-    data = request.json
-    message = data.get('message')
-    if not message:
-        return jsonify({'error': 'No message provided'}), 400
+openai.api_key = "YOUR_OPENAI_API_KEY"  # <-- вставь сюда свой ключ
 
-    # Тут вызываем OpenAI ChatGPT
+GPT_ID = "g-685458cfc9408191bf5a9ae37c230092"
+
+@app.route("/", methods=["POST"])
+def chat():
+    data = request.get_json()
+    user_message = data.get("message", "")
+
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{'role': 'user', 'content': message}]
+            model="gpt-4o",
+            messages=[{"role": "user", "content": user_message}],
+            tools=[{"type": "gpt", "gpt_id": GPT_ID}],
+            tool_choice={"type": "gpt", "gpt_id": GPT_ID}
         )
-        reply = response.choices[0].message['content']
+        reply = response.choices[0].message["content"]
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        reply = "Kļūda sazinoties ar sistēmu: " + str(e)
 
-    return jsonify({'reply': reply})
+    return jsonify({"reply": reply})
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
