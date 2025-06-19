@@ -1,10 +1,10 @@
 import openai
+import os
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-openai.api_key = "YOUR_OPENAI_API_KEY"  # <-- вставь сюда свой ключ
-
+openai.api_key = os.getenv("OPENAI_API_KEY")
 GPT_ID = "g-685458cfc9408191bf5a9ae37c230092"
 
 @app.route("/", methods=["POST"])
