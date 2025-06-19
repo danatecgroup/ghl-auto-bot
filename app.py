@@ -1,10 +1,10 @@
 import openai
-import os
 from flask import Flask, request, jsonify
+import os
 
 app = Flask(__name__)
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = os.environ.get("OPENAI_API_KEY")  # Берём ключ из GitHub Secrets
 GPT_ID = "g-685458cfc9408191bf5a9ae37c230092"
 
 @app.route("/", methods=["POST"])
@@ -24,6 +24,7 @@ def chat():
         reply = "Kļūda sazinoties ar sistēmu: " + str(e)
 
     return jsonify({"reply": reply})
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
