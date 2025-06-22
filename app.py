@@ -7,7 +7,7 @@ app = Flask(__name__)
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 GPT_ID = "g-685458cfc9408191bf5a9ae37c230092"
 
-@app.route("/", methods=["POST"])
+@app.route("/chat", methods=["POST"])  # <-- здесь было "/" — заменено на "/chat"
 def chat():
     data = request.get_json()
     user_message = data.get("message", "")
